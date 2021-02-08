@@ -1,0 +1,25 @@
+[package]
+name = "rest-api"
+version = "0.1.0"
+authors = ["kaustubh babar <kaustubh.babar@intelliconnect-tech.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+actix-web = { version = "3", features = ["openssl"] }
+actix-rt = "1.0"
+actix-service = "1.0.6"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+json = "0.12"
+diesel = { version = "1.4.4", features = ["postgres", "uuid", "r2d2", "chrono"] }
+dotenv = "0.15.0"
+env_logger = "0.8.2"
+jsonwebtoken = "7.2.0"
+futures = "0.3.8"
+log = "0.4.11"
+chrono = { version = "0.4", features = ["serde"] }
+easy_password = "0.1.2"
+http = "0.2.2"
+openssl = { version = "0.10", features = ["vendored"] }
