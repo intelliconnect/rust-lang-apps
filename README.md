@@ -1,19 +1,30 @@
 # RUST Actix-Web Microservice
+----------------------------------------------------
+Our Rust Beginners Kit for Application Development
+---------------------------------------------------
 
+#### A collection of sample code   using the actix rust framework to
 
-### Description:
+### A) Develop REST API ( database:postgres)
+
+#### Sample Code :
+- #####  Fetch data in JSON
+- #####  Fetch JSON Array
+- ##### Post Data
+- ##### Use JSON WebToken
+- ##### password hashing and verification
+
+### B) Description:
 -   ##### Register with user details
 -   ##### Login with username and password.Get verified and receive JWT token
 -   ##### Bcrypt for password hashing
 -   ##### JWT token Based Authontication
--   ##### Postgres for user database
-
 -   ##### API Endpoints:
     ###### Registering new user
     ###### Login
     ###### Fetching data from Postgres database
 
-## Dependencies:
+### C) Dependencies:
 
 Here's what does what:
 Crate | Description
@@ -25,10 +36,11 @@ Crate | Description
 [env_logger](https://crates.io/crates/env_logger)|Implements a logger that can be configured via environment variables.
 [jsonwebtoken](https://crates.io/crates/jsonwebtoken)|To Create and parses JWT (JSON Web Tokens)
 [http](https://crates.io/crates/http)|A general purpose library of common HTTP types
+[easy_password](https://crates.io/crates/easy_password)| Simple crate for password hashing
 
 
 
-## Run locally
+### D) Run locally
 
 > Before you get started, make sure that you have [PostgreSQL](https://postgresql.org), [Rust](https://rust-lang.org), [Cargo](https://doc.rust-lang.org/cargo/), and the [Diesel](https://diesel.rs) CLI installed and that you have Postgres running somewhere.
 
@@ -48,8 +60,8 @@ cargo run # could take a while!
 ```
 
 
-# API Endpoints
-## 1)Register
+### E) API Endpoints
+#### 1) Register
 ```
 curl -i --request POST \
   --url http://0.0.0.0:9000/register_user \
@@ -66,7 +78,7 @@ curl -i --request POST \
 }'
 ```
 
-## 2)Login
+#### 2) Login
 ```
 curl -i --request POST \
   --url http://0.0.0.0:9000/login \
@@ -74,7 +86,7 @@ curl -i --request POST \
   --data '{ "username":"admin","password":"1313n218u41"}'
 ```
 
-## 3)View Holidays
+#### 3) View Holidays
 ```
 curl -i --request GET \
   --url http://0.0.0.0:9000/view_holidays \
@@ -82,13 +94,3 @@ curl -i --request GET \
   --header 'Authorization: Bearer <token>' \
   --data '{ "year": "2020" }'
 ```
-
-## Future TODOs 
-- Error handling
-- Connection Pooling for Rust/Diesel
-
-
-
-
-
-
