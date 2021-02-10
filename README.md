@@ -5,26 +5,29 @@ Our Rust Beginners Kit for Application Development
 
 #### A collection of sample code   using the actix rust framework to
 
-### A) Develop REST API ( database:postgres)
+### A) Develop REST API
 
 #### Sample Code :
-- #####  Fetch data in JSON
-- #####  Fetch JSON Array
-- ##### Post Data
-- ##### Use JSON WebToken
-- ##### password hashing and verification
+Functionality | API | Description
+:---------|:--------|:--------
+Post JSON data and recieve JSON data | http://0.0.0.0:9000/register_user| Recieve user details, query to create new user and respond with status of request
+Post JSON data and recieve jwt token for auth |http://0.0.0.0:9000/login | Recieve username and passwrod, query and verify if credentials are correct, generate and respond with jwt
+Fetch JSON Array | http://0.0.0.0:9000/view_holidays | Recieve input year, query database for holiday dates and respond with results
 
-### B) Description:
--   ##### Register with user details
--   ##### Login with username and password.Get verified and receive JWT token
+###  B) Road Map
+-   ##### Integrate with Generally used  Amazon Web Services ( coming soon )
+-   ##### Integrate with Elastic Search
+-   ##### Better Error handling
+
+### C) Features :
+-   ##### Actix Web framework
+-   ##### Serde serialization framework
 -   ##### Bcrypt for password hashing
 -   ##### JWT token Based Authontication
--   ##### API Endpoints:
-    ###### Registering new user
-    ###### Login
-    ###### Fetching data from Postgres database
+-   ##### Postgres databse
+-   ##### Use of Diesel ORM
 
-### C) Dependencies:
+### D) Dependencies:
 
 Here's what does what:
 Crate | Description
@@ -40,7 +43,7 @@ Crate | Description
 
 
 
-### D) Run locally
+### E) Run locally
 
 > Before you get started, make sure that you have [PostgreSQL](https://postgresql.org), [Rust](https://rust-lang.org), [Cargo](https://doc.rust-lang.org/cargo/), and the [Diesel](https://diesel.rs) CLI installed and that you have Postgres running somewhere.
 
@@ -60,7 +63,7 @@ cargo run # could take a while!
 ```
 
 
-### E) API Endpoints
+### F) Example requests
 #### 1) Register
 ```
 curl -i --request POST \
