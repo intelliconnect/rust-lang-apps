@@ -33,11 +33,9 @@ pub async fn login(jsondata: web::Json<structs::Logindata>) -> HttpResponse {
         rbody.message.description = "Invalid User/Password Combination".to_string();
         HttpResponse::NotFound().json(&rbody)
     }
-    
 }
 
 pub async fn fetch_holidays(jsondata: web::Json<structs::Year>) -> HttpResponse {
-   
     if jsondata.year.is_empty() {
         let mut rbody = structs::Response::new();
         rbody.success = false;
@@ -60,7 +58,7 @@ pub async fn fetch_holidays(jsondata: web::Json<structs::Year>) -> HttpResponse 
     HttpResponse::Ok().json(&results)
 }
 
-pub async fn register_user(jsondata: web::Json<structs::NewUser>) -> HttpResponse{
+pub async fn register_user(jsondata: web::Json<structs::NewUser>) -> HttpResponse {
     //Declare Body of Response
     let mut rbody = structs::Response::new();
 

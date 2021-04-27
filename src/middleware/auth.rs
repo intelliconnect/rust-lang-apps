@@ -1,3 +1,4 @@
+use crate::model::{dbmethods, structs};
 use actix_service::{Service, Transform};
 use actix_web::{
     dev::{ServiceRequest, ServiceResponse},
@@ -8,7 +9,6 @@ use futures::future::{ok, Ready};
 use futures::Future;
 use std::pin::Pin;
 use std::task::{Context, Poll};
-use crate::model::{dbmethods, structs};
 
 pub struct Auth;
 
@@ -54,9 +54,7 @@ where
         let mut token_verification = false;
 
         //Skip middleware for this login API
-        if req.uri().to_string() == *"/login"
-            || req.uri().to_string() == *"/register_user"
-        {
+        if req.uri().to_string() == *"/login" || req.uri().to_string() == *"/register_user" {
             token_verification = true
         }
 
@@ -65,7 +63,7 @@ where
         //Insert username from token into request header
         if let Some(token) = req.headers().get("AUTHORIZATION") {
             if let Ok(token_str) = token.to_str() {
-                debug!("Token converted to strinjg");
+                debug!("Token converted to string");
                 if token_str.starts_with("bearer") || token_str.starts_with("Bearer") {
                     let token = token_str[6..token_str.len()].trim();
                     let decode_response = dbmethods::decode_token(token.to_string());
