@@ -4,7 +4,8 @@ use std::env::var;
 //Return database URL
 pub fn db_url() -> String {
     dotenv().ok();
-    var("DATABASE_URL").unwrap()}
+    var("DATABASE_URL").unwrap()
+}
 //Return domain
 pub fn domain() -> String {
     dotenv().ok();
@@ -22,13 +23,10 @@ pub fn port() -> u16 {
 //Return Secret key for JWT
 pub fn jwt_sc() -> String {
     dotenv().ok();
-    var("JWT_SECRET")
-        .unwrap()
+    var("JWT_SECRET").unwrap()
 }
 
 pub fn get_pass_sc() -> String {
     dotenv().ok();
-    var("PASS_SECRET")
-        .unwrap()
+    var("PASS_SECRET").unwrap()
 }
-

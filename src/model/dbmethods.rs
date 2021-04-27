@@ -5,8 +5,12 @@ use diesel::PgConnection;
 use diesel::{prelude::*, sql_query};
 use dotenv::dotenv;
 use easy_password::bcrypt;
+use failure::{format_err, Error};
 use jsonwebtoken::{encode, Algorithm, DecodingKey, EncodingKey, Header, TokenData, Validation};
-
+use rusoto_core::{ByteStream, Region, RusotoError};
+use rusoto_dynamodb::{AttributeValue, DynamoDb, DynamoDbClient, QueryInput};
+use rusoto_s3::{PutObjectError, PutObjectOutput, S3, S3Client};
+use std::collections::HashMap;
 
 //TODO; implement r2d2 for connection pool
 // Error handling
@@ -23,7 +27,7 @@ pub fn fetch_user(jusername: &str) -> std::vec::Vec<structs::Users> {
 
     //create new databse connection
     let connection = getdbconn();
-  
+
     let results = user_login
         .filter(username.eq(jusername))
         .load::<structs::Users>(&connection)
@@ -82,7 +86,7 @@ pub fn fetch_holidays(year: &str) -> std::vec::Vec<structs::Holidays> {
         Ok(result) => return result,
         Err(err) => {
             error!("sql query failed");
-            panic!("sql query failed {:?}",err);
+            panic!("sql query failed {:?}", err);
         }
     }
 }
@@ -110,4 +114,76 @@ pub fn hash_pass(pass_string: &str) -> String {
 pub fn varify_pass(login_pass: &str, hash_pass: &str) -> bool {
     let pass_secretkey = vars::get_pass_sc();
     return bcrypt::verify_password(login_pass, hash_pass, pass_secretkey.as_ref()).unwrap();
+}
+
+#[tokio::main]
+pub async fn send_to_s3(bst: ByteStream, filename: String) -> Result<PutObjectOutput,RusotoError<PutObjectError>> {
+    let put_request = rusoto_s3::PutObjectRequest {
+        bucket: "elastic-search-bucket-test".to_owned(),
+        key: filename.clone(),
+        body: Some(bst),
+        ..Default::default()
+    };
+
+    let client = S3Client::new(Region::ApSoutheast1);
+
+    match client.put_object(put_request).await {
+        Ok(response) => {return Ok(response)},
+        Err(err) => {return Err(err);},
+    };
+}
+
+#[tokio::main]
+pub async fn list_data(user_id: String) -> Result<Vec<structs::Messagedynamo>, Error> {
+    let client = DynamoDbClient::new(Region::UsEast2);
+    let expression = "ID =:id".to_string();
+    let mut values = HashMap::new();
+    values.insert(":id".into(), string_to_attr(user_id.to_string()));
+    let query = QueryInput {
+        table_name: "rusttest".into(),
+        key_condition_expression: Some(expression),
+        expression_attribute_values: Some(values),
+        ..Default::default()
+    };
+    match client.query(query).await {
+        Ok(data) => {
+            let msg = data
+                .items
+                .ok_or_else(|| format_err!("No items found in dynamodb"))?;
+
+            let mut messages = Vec::new();
+
+            let id1 = msg[0]
+                .get("ID")
+                .ok_or_else(|| format_err!("error"))
+                .and_then(attr_to_string)?;
+            let msg = msg[0]
+                .get("message")
+                .ok_or_else(|| format_err!("error"))
+                .and_then(attr_to_string)?;
+            let message = structs::Messagedynamo {
+                id: id1,
+                message: msg,
+            };
+            messages.push(message);
+
+            Ok(messages)
+        }
+        Err(err) => return Err(format_err!("{:?}", err)),
+    }
+}
+
+pub fn string_to_attr(s: String) -> AttributeValue {
+    AttributeValue {
+        s: Some(s),
+        ..Default::default()
+    }
+}
+
+pub fn attr_to_string(attr: &AttributeValue) -> Result<String, Error> {
+    if let Some(value) = &attr.s {
+        Ok(value.to_string())
+    } else {
+        Err(format_err!("no string value"))
+    }
 }

@@ -109,3 +109,21 @@ pub struct Claims {
 pub struct Year {
     pub year: String,
 }
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct Lambdastruct {
+    pub success: bool,
+    pub result: Vec<Option<String>>,
+}
+
+#[derive(Default, Debug, Serialize, Deserialize)]
+pub struct Dynamouserid {
+    pub id: String,
+}
+
+#[derive(Default, Debug, PartialEq, Serialize, Deserialize)]
+pub struct Messagedynamo {
+    #[serde(rename = "ID")]
+    pub id: String,
+    pub message: String,
+}

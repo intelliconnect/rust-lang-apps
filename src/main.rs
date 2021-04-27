@@ -12,11 +12,11 @@ mod schema;
 mod test;
 mod vars;
 
+use actix_cors::Cors;
 use actix_web::{web, App, HttpServer};
 use dotenv::dotenv;
-use actix_cors::Cors;
 
-use controller::{home};
+use controller::{awsc, home};
 use middleware::auth;
 
 #[actix_web::main]
@@ -38,8 +38,12 @@ async fn main() -> std::io::Result<()> {
             .route("/login", web::post().to(home::login))
             .route("/view_holidays", web::get().to(home::fetch_holidays))
             .route("/register_user", web::post().to(home::register_user))
-            
-            
+            .route(
+                "/lambda_example",
+                web::get().to(awsc::lambda_example_synchronus),
+            )
+            .route("/upload_file", web::post().to(awsc::upload_file))
+            .route("/dynamodb_example", web::get().to(awsc::dynamodb_example))
     })
     .bind(format!("{}:{}", vars::domain(), vars::port()))?
     .run()

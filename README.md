@@ -13,10 +13,15 @@ Functionality | API | Description
 Post JSON data and recieve JSON data | http://0.0.0.0:9000/register_user| Recieve user details, query to create new user and respond with status of request
 Post JSON data and recieve jwt token for auth |http://0.0.0.0:9000/login | Recieve username and passwrod, query and verify if credentials are correct, generate and respond with jwt
 Fetch JSON Array | http://0.0.0.0:9000/view_holidays | Recieve input year, query database for holiday dates and respond with results
+AWS Lambda function invoke | http://0.0.0.0:9000/lambda_example | Invoke the function synchronously
+Upload to AWS S3 | http://0.0.0.0:9000/upload_file | ----
+Dynamodb Query | http://0.0.0.0:9000/dynamodb_example | Simple Dynamodb Query Example
 
 ###  B) Road Map
--   ##### Integrate with Generally used  Amazon Web Services ( coming soon )
+-   ##### Integrate with Generally used  Amazon Web Services ( more coming soon )
 -   ##### Integrate with Elastic Search
+-   ##### Graphql
+
 -   ##### Better Error handling
 
 ### C) Features :
@@ -26,6 +31,9 @@ Fetch JSON Array | http://0.0.0.0:9000/view_holidays | Recieve input year, query
 -   ##### JWT token Based Authontication
 -   ##### Postgres databse
 -   ##### Use of Diesel ORM
+-   ##### AWS Lambda, Dynamodb, S3 examples
+
+
 
 ### D) Dependencies:
 
@@ -35,6 +43,7 @@ Crate | Description
 [actix-web](https://github.com/actix/actix-web)|Actix Web is a powerful, pragmatic, and extremely fast web framework for Rust.
 [Diesel](https://diesel.rs)|Diesel is a Safe, Extensible ORM and Query Builder for Rust
 [Serde](https://crates.io/crates/serde)|Serde is a framework for serializing and deserializing Rust data structures
+[rusoto](https://www.rusoto.org/)| Rusoto is an AWS SDK for Rust.
 [dotenv](https://crates.io/crates/dotenv)|Required for loading environment variables from .env file
 [env_logger](https://crates.io/crates/env_logger)|Implements a logger that can be configured via environment variables.
 [jsonwebtoken](https://crates.io/crates/jsonwebtoken)|To Create and parses JWT (JSON Web Tokens)
@@ -96,4 +105,47 @@ curl -i --request GET \
   --header 'content-type: application/json' \
   --header 'Authorization: Bearer <token>' \
   --data '{ "year": "2020" }'
+```
+
+
+#### 4) AWS Lambda Invoke
+
+```
+curl -i --request GET \
+--url http://0.0.0.0:9000/lambda_example \
+--header 'content-type: application/json'
+```
+##### make sure you have lambda function similar to this 
+
+![Screenshot](docs/images/lambda.png)
+
+
+#### 5) AWS S3 Upload
+##### make sure you have a bucket on S3 "elastic-search-bucket-test"
+
+```
+curl -i POST \
+--url http://0.0.0.0:9000/upload_file   \
+--header 'content-type: multipart/form-data' \
+-F "file=@image_upload_test.jpg"
+```
+
+
+
+
+
+#### 6) AWS Dynamodb Query
+##### make sure you have table with name "rusttest" and an item similar to this
+
+![Screenshot](docs/images/ddb.png)
+
+
+
+
+
+```
+curl -i --request GET \
+--url http://0.0.0.0:9000/dynamodb_example \
+--header 'content-type: application/json' \
+--data '{"id":"ICT"}'
 ```
