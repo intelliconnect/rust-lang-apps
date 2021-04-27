@@ -115,13 +115,13 @@ curl -i --request GET \
 --url http://0.0.0.0:9000/lambda_example \
 --header 'content-type: application/json'
 ```
-######make sure you have lambda function similar to this 
+##### make sure you have lambda function similar to this 
 
 ![Screenshot](docs/images/lambda.png)
 
 
 #### 5) AWS S3 Upload
-######make sure you have a bucket on S3 "elastic-search-bucket-test"
+##### make sure you have a bucket on S3 "elastic-search-bucket-test"
 
 ```
 curl -i POST \
@@ -135,7 +135,7 @@ curl -i POST \
 
 
 #### 6) AWS Dynamodb Query
-######make sure you have table with name "rusttest" and an item similar to this
+##### make sure you have table with name "rusttest" and an item similar to this
 
 ![Screenshot](docs/images/ddb.png)
 
