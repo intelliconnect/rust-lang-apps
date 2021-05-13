@@ -1,4 +1,5 @@
 use crate::schema::{config_holidays, user_login};
+use diesel::sql_types::*;
 use serde::{Deserialize, Serialize};
 use std::default::Default;
 
@@ -21,6 +22,43 @@ pub struct Users {
     pub created_at: Option<chrono::NaiveDateTime>,
     pub created_by: Option<String>,
     pub updated_at: Option<chrono::NaiveDateTime>,
+    pub updated_by: Option<String>,
+}
+
+#[derive(Debug, Serialize, Deserialize, QueryableByName)]
+pub struct NUsers {
+    #[sql_type = "BigInt"]
+    pub id: i64,
+    #[sql_type = "Text"]
+    pub firstname: String,
+    #[sql_type = "Text"]
+    pub lastname: String,
+    #[sql_type = "Text"]
+    pub username: String,
+    #[sql_type = "Text"]
+    pub email: String,
+    #[sql_type = "Text"]
+    pub mobile: String,
+    #[sql_type = "Nullable<Text>"]
+    pub facebookconnect: Option<String>,
+    #[sql_type = "Nullable<Text>"]
+    pub googleconnect: Option<String>,
+    #[sql_type = "Text"]
+    #[serde(skip_serializing)] 
+    pub password: String,
+    #[sql_type = "Text"]
+    pub ip_address: String,
+    #[sql_type = "Nullable<Bool>"]
+    pub isactive: Option<bool>,
+    #[sql_type = "Nullable<BigInt>"]
+    pub sort_order: Option<i64>,
+    #[sql_type = "Nullable<Timestamp>"]
+    pub created_at: Option<chrono::NaiveDateTime>,
+    #[sql_type = "Nullable<Text>"]
+    pub created_by: Option<String>,
+    #[sql_type = "Nullable<Timestamp>"]
+    pub updated_at: Option<chrono::NaiveDateTime>,
+    #[sql_type = "Nullable<Text>"]
     pub updated_by: Option<String>,
 }
 

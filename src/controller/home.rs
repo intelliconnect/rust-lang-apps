@@ -87,3 +87,9 @@ pub async fn register_user(jsondata: web::Json<structs::NewUser>) -> HttpRespons
         return HttpResponse::Ok().json(&rbody);
     }
 }
+
+pub async fn list_users() -> HttpResponse {
+    let results = dbmethods::list_users();
+
+    HttpResponse::Ok().json(results)
+}

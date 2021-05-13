@@ -13,6 +13,7 @@ Functionality | API | Description
 Post JSON data and recieve JSON data | http://0.0.0.0:9000/register_user| Recieve user details, query to create new user and respond with status of request
 Post JSON data and recieve jwt token for auth |http://0.0.0.0:9000/login | Recieve username and passwrod, query and verify if credentials are correct, generate and respond with jwt
 Fetch JSON Array | http://0.0.0.0:9000/view_holidays | Recieve input year, query database for holiday dates and respond with results
+Raw Query example| http://0.0.0.0:9000/list_users | Raw sql query and Manually specifying sql datatypes for structs
 AWS Lambda function invoke | http://0.0.0.0:9000/lambda_example | Invoke the function synchronously
 Upload to AWS S3 | http://0.0.0.0:9000/upload_file | ----
 Dynamodb Query | http://0.0.0.0:9000/dynamodb_example | Simple Dynamodb Query Example
