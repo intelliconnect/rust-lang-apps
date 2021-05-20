@@ -74,10 +74,15 @@ pub async fn upload_file(mut payload: Multipart) -> HttpResponse {
                     let data = chunk.unwrap().to_vec();
                     let bst = ByteStream::from(data);
                     //upload file to AWS S3
-                     match dbmethods::send_to_s3(bst, filename_tobe_saved.clone()) {
-                         Ok(response) => {return HttpResponse::Ok().json(format!("Uploaded - {:?}",response))},
-                         Err(err)=>{return HttpResponse::InternalServerError().json(format!("Failed to upload {:?}",err))},
-                     }
+                    match dbmethods::send_to_s3(bst, filename_tobe_saved.clone()) {
+                        Ok(response) => {
+                            return HttpResponse::Ok().json(format!("Uploaded - {:?}", response))
+                        }
+                        Err(err) => {
+                            return HttpResponse::InternalServerError()
+                                .json(format!("Failed to upload {:?}", err))
+                        }
+                    }
                 }
             }
             None => {
@@ -91,7 +96,7 @@ pub async fn upload_file(mut payload: Multipart) -> HttpResponse {
 
 pub async fn dynamodb_example(jsondata: web::Json<structs::Dynamouserid>) -> HttpResponse {
     match dbmethods::list_data(jsondata.id.clone()) {
-        Ok(response) => {    HttpResponse::Ok().json(response)},
-        Err(err) => {HttpResponse::InternalServerError().json(format!("{:?}",err))},
+        Ok(response) => HttpResponse::Ok().json(response),
+        Err(err) => HttpResponse::InternalServerError().json(format!("{:?}", err)),
     }
 }

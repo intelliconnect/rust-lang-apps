@@ -9,7 +9,7 @@ use failure::{format_err, Error};
 use jsonwebtoken::{encode, Algorithm, DecodingKey, EncodingKey, Header, TokenData, Validation};
 use rusoto_core::{ByteStream, Region, RusotoError};
 use rusoto_dynamodb::{AttributeValue, DynamoDb, DynamoDbClient, QueryInput};
-use rusoto_s3::{PutObjectError, PutObjectOutput, S3, S3Client};
+use rusoto_s3::{PutObjectError, PutObjectOutput, S3Client, S3};
 use std::collections::HashMap;
 
 //TODO; implement r2d2 for connection pool
@@ -91,10 +91,10 @@ pub fn fetch_holidays(year: &str) -> std::vec::Vec<structs::Holidays> {
     }
 }
 
-pub fn create_user(jsondata: structs::NewUser) -> Result<bool, actix_web::error::Error> {
+pub fn create_user(mut jsondata: structs::NewUser) -> Result<bool, actix_web::error::Error> {
     use crate::schema::user_login::dsl::user_login;
     let connection = getdbconn();
-    let mut jsondata = jsondata;
+    // let mut jsondata = jsondata;
     let encrypted_password = hash_pass(&jsondata.password);
     jsondata.password = encrypted_password;
 
@@ -117,7 +117,10 @@ pub fn varify_pass(login_pass: &str, hash_pass: &str) -> bool {
 }
 
 #[tokio::main]
-pub async fn send_to_s3(bst: ByteStream, filename: String) -> Result<PutObjectOutput,RusotoError<PutObjectError>> {
+pub async fn send_to_s3(
+    bst: ByteStream,
+    filename: String,
+) -> Result<PutObjectOutput, RusotoError<PutObjectError>> {
     let put_request = rusoto_s3::PutObjectRequest {
         bucket: "elastic-search-bucket-test".to_owned(),
         key: filename.clone(),
@@ -128,8 +131,10 @@ pub async fn send_to_s3(bst: ByteStream, filename: String) -> Result<PutObjectOu
     let client = S3Client::new(Region::ApSoutheast1);
 
     match client.put_object(put_request).await {
-        Ok(response) => {return Ok(response)},
-        Err(err) => {return Err(err);},
+        Ok(response) => return Ok(response),
+        Err(err) => {
+            return Err(err);
+        }
     };
 }
 
@@ -186,4 +191,14 @@ pub fn attr_to_string(attr: &AttributeValue) -> Result<String, Error> {
     } else {
         Err(format_err!("no string value"))
     }
+}
+
+pub fn list_users() -> Vec<structs::NUsers> {
+    let conn = getdbconn();
+
+    let results = sql_query(format!("SELECT * FROM user_login"))
+        .load::<structs::NUsers>(&conn)
+        .unwrap();
+
+    return results;
 }
