@@ -44,7 +44,7 @@ pub struct NUsers {
     #[sql_type = "Nullable<Text>"]
     pub googleconnect: Option<String>,
     #[sql_type = "Text"]
-    #[serde(skip_serializing)] 
+    #[serde(skip_serializing)]
     pub password: String,
     #[sql_type = "Text"]
     pub ip_address: String,
@@ -164,4 +164,31 @@ pub struct Messagedynamo {
     #[serde(rename = "ID")]
     pub id: String,
     pub message: String,
+}
+
+#[derive(Debug, Serialize, Deserialize, QueryableByName)]
+#[table_name = "config_holidays"]
+
+pub struct Medium {
+    #[sql_type = "BigInt"]
+    pub id: i64,
+    #[sql_type = "Text"]
+    pub firstname: String,
+    #[sql_type = "Text"]
+    pub lastname: String,
+    #[sql_type = "Nullable<Text>"]
+    pub email: Option<String>,
+    #[sql_type = "Text"]
+    pub mobile: String,
+    #[sql_type = "Text"]
+    #[serde(skip_serializing)]
+    pub password: String,
+    #[sql_type = "Nullable<Bool>"]
+    pub isactive: Option<bool>,
+    #[sql_type = "Nullable<BigInt>"]
+    pub sort_order: Option<i64>,
+    #[sql_type = "Nullable<Timestamp>"]
+    pub created_at: Option<chrono::NaiveDateTime>,
+    #[sql_type = "Nullable<Text>"]
+    pub created_by: Option<String>,
 }
