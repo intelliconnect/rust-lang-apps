@@ -7,16 +7,16 @@ extern crate easy_password;
 mod controller;
 mod middleware;
 mod model;
+mod routes;
 mod schema;
 #[cfg(test)]
 mod test;
 mod vars;
 
 use actix_cors::Cors;
-use actix_web::{web, App, HttpServer};
+use actix_web::{App, HttpServer};
 use dotenv::dotenv;
 
-use controller::{awsc, home};
 use middleware::auth;
 
 #[actix_web::main]
@@ -35,16 +35,8 @@ async fn main() -> std::io::Result<()> {
             .wrap(cors)
             .wrap(auth::Auth)
             .wrap(actix_web::middleware::Logger::default())
-            .route("/login", web::post().to(home::login))
-            .route("/view_holidays", web::get().to(home::fetch_holidays))
-            .route("/register_user", web::post().to(home::register_user))
-            .route("/list_users", web::get().to(home::list_users))
-            .route(
-                "/lambda_example",
-                web::get().to(awsc::lambda_example_synchronus),
-            )
-            .route("/upload_file", web::post().to(awsc::upload_file))
-            .route("/dynamodb_example", web::get().to(awsc::dynamodb_example))
+            .configure(routes::dieselr::configure)
+            .configure(routes::awsr::configure)
     })
     .bind(format!("{}:{}", vars::domain(), vars::port()))?
     .run()
