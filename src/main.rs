@@ -19,6 +19,8 @@ use dotenv::dotenv;
 
 use middleware::auth;
 
+use crate::model::dbmethods::string_to_attr;
+
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     // Load env variables
@@ -26,6 +28,15 @@ async fn main() -> std::io::Result<()> {
     //Initiate Logger
     env_logger::init();
     info!("starting server");
+
+let s = String::from("hello");
+let a = string_to_attr(s);
+println!("{:#?}",a);
+
+
+
+
+
     //Configure and Start New HTTP server
     HttpServer::new(move || {
         //Cors::permissive() should only be used development purposes, not to be used in production
