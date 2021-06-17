@@ -32,28 +32,26 @@ pub async fn lambda_example_synchronus() -> HttpResponse {
                             Err(err) => {
                                 warn!("{:?}", err);
                                 let errs = err.to_string();
-                                HttpResponse::InternalServerError()
-                                    .json(json!({ "Error": [format!("{}", errs)] }))
+                                HttpResponse::InternalServerError().json(json!({ "Error": [errs] }))
                             }
                         }
                     }
                     Err(err) => {
                         warn!("{:?}", err);
                         let errs = err.to_string();
-                        HttpResponse::InternalServerError()
-                            .json(json!({ "Error": [format!("{}", errs)] }))
+                        HttpResponse::InternalServerError().json(json!({ "Error": [errs] }))
                     }
                 }
             }
             None => {
                 warn!("empty response from lambda");
-                HttpResponse::InternalServerError().json(format!("No response from lambda"))
+                HttpResponse::InternalServerError().json("No response from lambda".to_string())
             }
         },
         Err(err) => {
             warn!("{:?}", err);
             let errs = err.to_string();
-            HttpResponse::InternalServerError().json(json!({ "Error": [format!("{}", errs)] }))
+            HttpResponse::InternalServerError().json(json!({ "Error": [errs] }))
         }
     }
 }
@@ -74,15 +72,13 @@ pub async fn upload_file(mut payload: Multipart) -> HttpResponse {
                     let data = chunk.unwrap().to_vec();
                     let bst = ByteStream::from(data);
                     //upload file to AWS S3
-                    match dbmethods::send_to_s3(bst, filename_tobe_saved.clone()) {
+                    return match dbmethods::send_to_s3(bst, filename_tobe_saved.clone()) {
                         Ok(response) => {
-                            return HttpResponse::Ok().json(format!("Uploaded - {:?}", response))
+                            HttpResponse::Ok().json(format!("Uploaded - {:?}", response))
                         }
-                        Err(err) => {
-                            return HttpResponse::InternalServerError()
-                                .json(format!("Failed to upload {:?}", err))
-                        }
-                    }
+                        Err(err) => HttpResponse::InternalServerError()
+                            .json(format!("Failed to upload {:?}", err)),
+                    };
                 }
             }
             None => {

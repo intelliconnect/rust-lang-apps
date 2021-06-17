@@ -28,12 +28,10 @@ pub fn fetch_user(jusername: &str) -> std::vec::Vec<structs::Users> {
     //create new databse connection
     let connection = getdbconn();
 
-    let results = user_login
+    user_login
         .filter(username.eq(jusername))
         .load::<structs::Users>(&connection)
-        .unwrap();
-    // return results
-    results
+        .unwrap()
 }
 
 //Create New JWT
@@ -83,7 +81,7 @@ pub fn fetch_holidays(year: &str) -> std::vec::Vec<structs::Holidays> {
     ))
     .load(&connection)
     {
-        Ok(result) => return result,
+        Ok(result) => result,
         Err(err) => {
             error!("sql query failed");
             panic!("sql query failed {:?}", err);
@@ -101,14 +99,14 @@ pub fn create_user(mut jsondata: structs::NewUser) -> Result<bool, actix_web::er
     let results = diesel::insert_into(user_login)
         .values(&jsondata)
         .get_results::<structs::Users>(&connection);
-    return Ok(results.is_ok());
+    Ok(results.is_ok())
 }
 
 pub fn hash_pass(pass_string: &str) -> String {
     let pass_secretkey = vars::get_pass_sc();
 
-    let hash = bcrypt::hash_password(pass_string, pass_secretkey.as_ref(), 12).unwrap();
-    hash
+    // hash
+    bcrypt::hash_password(pass_string, pass_secretkey.as_ref(), 12).unwrap()
 }
 
 pub fn varify_pass(login_pass: &str, hash_pass: &str) -> bool {
@@ -130,11 +128,9 @@ pub async fn send_to_s3(
 
     let client = S3Client::new(Region::ApSoutheast1);
 
-    match client.put_object(put_request).await {
-        Ok(response) => return Ok(response),
-        Err(err) => {
-            return Err(err);
-        }
+    return match client.put_object(put_request).await {
+        Ok(response) => Ok(response),
+        Err(err) => Err(err),
     };
 }
 
@@ -196,9 +192,8 @@ pub fn attr_to_string(attr: &AttributeValue) -> Result<String, Error> {
 pub fn list_users() -> Vec<structs::NUsers> {
     let conn = getdbconn();
 
-    let results = sql_query(format!("SELECT * FROM user_login"))
+    // results
+    sql_query("SELECT * FROM user_login".to_string())
         .load::<structs::NUsers>(&conn)
-        .unwrap();
-
-    return results;
+        .unwrap()
 }
