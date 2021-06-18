@@ -121,7 +121,7 @@ pub struct Tokendata {
 //Methods for Response
 impl Response {
     pub fn new() -> Response {
-        let rbody = Response {
+        Response {
             success: false,
             message: Msg {
                 code: "".to_string(),
@@ -131,8 +131,7 @@ impl Response {
                 name: "".to_string(),
                 token: "".to_string(),
             },
-        };
-        rbody
+        }
     }
 }
 
