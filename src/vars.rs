@@ -9,13 +9,13 @@ pub fn db_url() -> String {
 //Return domain
 pub fn domain() -> String {
     dotenv().ok();
-    var("DOMAIN").unwrap_or("0.0.0.0".to_string())
+    var("DOMAIN").unwrap_or_else(|_| "0.0.0.0".to_string())
 }
 //return PORT
 pub fn port() -> u16 {
     dotenv().ok();
     var("PORT")
-        .unwrap_or("9000".to_string())
+        .unwrap_or_else(|_| "9000".to_string())
         .parse::<u16>()
         .unwrap()
 }

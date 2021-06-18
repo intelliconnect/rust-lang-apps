@@ -29,13 +29,6 @@ async fn main() -> std::io::Result<()> {
     env_logger::init();
     info!("starting server");
 
-let s = String::from("hello");
-let a = string_to_attr(s);
-println!("{:#?}",a);
-
-
-
-
 
     //Configure and Start New HTTP server
     HttpServer::new(move || {

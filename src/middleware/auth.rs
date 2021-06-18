@@ -54,7 +54,7 @@ where
         let mut token_verification = false;
 
         //Skip middleware for this login API
-        if req.uri().to_string() == *"/login" || req.uri().to_string() == *"/register_user" {
+        if req.uri().path() == "/login" || req.uri().path() == "/register_user" {
             token_verification = true
         }
 
@@ -67,6 +67,16 @@ where
                 if token_str.starts_with("bearer") || token_str.starts_with("Bearer") {
                     let token = token_str[6..token_str.len()].trim();
                     let decode_response = dbmethods::decode_token(token.to_string());
+                    if let Ok(token_data) = decode_response {
+                        let username = token_data.claims.username;
+                        req.headers_mut().insert(
+                            header::HeaderName::from_static("token_username"),
+                            header::HeaderValue::from_str(&username).unwrap(),
+                        );
+                        // println!("{:?}",req.headers());
+                        token_verification = true
+                    }
+                    /*
                     if decode_response.is_ok() {
                         let token_data = decode_response.unwrap();
                         let username = token_data.claims.username;
@@ -77,6 +87,7 @@ where
                         // println!("{:?}",req.headers());
                         token_verification = true
                     }
+                    */
                 }
             }
         }
